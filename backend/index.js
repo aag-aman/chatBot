@@ -3,10 +3,13 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import ejs from 'ejs';
 import cors from 'cors';
+import dotenv from 'dotenv';
 
+
+dotenv.config();
 //MongoDB
 import { MongoClient, ServerApiVersion } from 'mongodb';
-const uri = "mongodb+srv://amangupta:nQ6a1r2kjP4zjGuu@cluster0.knsa2oe.mongodb.net/?retryWrites=true&w=majority";
+const uri = process.env.MONGODBURI;
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
@@ -19,7 +22,7 @@ const client = new MongoClient(uri, {
 
 //OPENAI Connect
 const openai = new OpenAI({
-  apiKey: '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', // defaults to process.env["OPENAI_API_KEY"]
+  apiKey: process.env.OPENAIKEY, // defaults to process.env["OPENAI_API_KEY"]
 });
 
 const msgList = [{
@@ -78,7 +81,6 @@ async function initialize(){
 
 async function getResponse(message) {
   console.log("Get response started")
-    // console.log(msgList);
     
     addUsrMsg(message);
     
@@ -125,7 +127,7 @@ async function addToDb(usrmsg,airesponse){
 }
 
 
-app.listen(8000, function() {
-    console.log("Server started on port 8000");
+app.listen(process.env.PORT, function() {
+    console.log("Server started on port "+ process.env.PORT);
   });
   
