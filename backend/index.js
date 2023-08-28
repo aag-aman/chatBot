@@ -60,7 +60,7 @@ app.post("/sendMessage", function(req,res){
     getResponse(usrReq).then(x => {
       console.log(x)
       res.send(x);
-      // addToDb(usrReq,x);
+      addToDb(usrReq,x);
     });
     
 })
