@@ -29,7 +29,7 @@
   align-self: flex-end !important;
 }
 
-.bot {
+.assistant {
   background-color: #4444ff; /* Light gray background for bot messages */
   align-self: flex-start;
 }

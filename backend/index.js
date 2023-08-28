@@ -10,6 +10,7 @@ dotenv.config();
 //MongoDB
 import { MongoClient, ServerApiVersion } from 'mongodb';
 const uri = process.env.MONGODBURI;
+
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
@@ -57,8 +58,9 @@ app.post("/sendMessage", function(req,res){
     content: req.body.message
   }
     getResponse(usrReq).then(x => {
-      res.send({x});
-      addToDb(usrReq,x);
+      console.log(x)
+      res.send(x);
+      // addToDb(usrReq,x);
     });
     
 })
@@ -69,8 +71,9 @@ async function initialize(){
         messages: msgList,
         model: 'gpt-3.5-turbo'
     });
-    addAIResponse(completion.choices[0].message)
-    console.log(completion.choices[0].message)
+    msgList.push(completion.choices[0].message)
+    // console.log("_______")
+    // console.log(msgList)
     return (completion.choices[0].message)
     
 }
@@ -82,7 +85,9 @@ async function initialize(){
 async function getResponse(message) {
   console.log("Get response started")
     
-    addUsrMsg(message);
+  msgList.push(message);
+  // console.log("_______")
+  // console.log(msgList)
     
   const completion = await openai.chat.completions.create({
     messages: msgList,
@@ -90,27 +95,20 @@ async function getResponse(message) {
   });
   
   
-  addAIResponse(completion.choices[0].message);
+  msgList.push(completion.choices[0].message);
+  // console.log("_______")
+  // console.log(msgList)
   
   return completion.choices[0].message;
 }
 
-function addUsrMsg(msg){
-  msgList.push(msg)
-  
-}
-
-function addAIResponse(msg){
-
-  msgList.push(msg)
-}
 
 async function addToDb(usrmsg,airesponse){
   
   usrmsg.time = new Date().toLocaleString();
   airesponse.time = new Date().toLocaleString();
   const arr = [usrmsg,airesponse]
-  console.log(arr)
+  // console.log(arr)
   try {
     await client.connect();
 

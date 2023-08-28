@@ -49,11 +49,11 @@ const Chat = () => {
     async function fetchData() {
       try {
         // Make the API call
-        // console.log("Making API Call")
+        console.log("Making API Call")
         const response = await axios.get(Config.BASE_URL); 
-        // console.log(response.data.content)
+        console.log(response.data.content)
 
-        const botMessage = {text:response.data.content, sender: "bot"}
+        const botMessage = {content:response.data.content, role: "assistant"}
         // console.log("Message" + botMessage)
         setMessages([...messages,botMessage])
         // Process the API response and update the state if needed
@@ -77,15 +77,19 @@ const Chat = () => {
       try {
         // Update mesages
 
-        const usrMessage = {text: input, sender: "user"};
+        const usrMessage = {content: input, role: "user"};
+        console.log(usrMessage)
         // setMessages([...messages, {text: input, sender: "user"}]);
         // Send the input to the backend API
         // console.log(Config.API_ENDPOINT);
         const response = await axios.post(Config.API_ENDPOINT, { message: input });
-
+        console.log(response)
         // Update messages with the response data
-        const botMessage = {text:response.data.message, sender: "bot"}
+        const botMessage = response.data;
+        console.log(botMessage)
+
         setMessages([...messages, usrMessage, botMessage]);
+        console.log(messages);
         
 
         setInput('');
@@ -102,8 +106,8 @@ const Chat = () => {
       <div className="message-container">
       {messages.map((message, index) => (
         <div className={`  ${classes.bubbleContainer}`} >
-            <div key={index} className={`${message.sender} ${classes.bubble}`}>
-            {message.text}
+            <div key={index} className={`${message.role} ${classes.bubble}`}>
+            {message.content}
           </div>
         </div>
         ))}
